@@ -26,3 +26,4 @@ Create a .env file in the backend/ folder:
 HINDSIGHT_API_KEY=your_key
 HINDSIGHT_BASE_URL=https://api.hindsight.vectorize.io
 HINDSIGHT_BANK_ID=sales-agent
+# sales-memory-agent
