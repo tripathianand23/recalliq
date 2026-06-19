@@ -138,13 +138,25 @@ def upsert_prospect(payload: InteractionCreate) -> dict[str, Any]:
 
 def create_interaction(payload: InteractionCreate, prospect_id: int, deal_id: str) -> dict[str, Any]:
     now = utc_now()
+
     with get_conn() as conn:
         cursor = conn.execute(
             """
             INSERT INTO interactions (
-                prospect_id, prospect_name, company, role_title, interaction_type,
-                meeting_notes, objections, competitor_mentioned, budget, timeline,
-                decision_makers, next_steps, deal_id, created_at
+                prospect_id,
+                prospect_name,
+                company,
+                role_title,
+                interaction_type,
+                meeting_notes,
+                objections,
+                competitor_mentioned,
+                budget,
+                timeline,
+                decision_makers,
+                next_steps,
+                deal_id,
+                created_at
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
@@ -155,19 +167,22 @@ def create_interaction(payload: InteractionCreate, prospect_id: int, deal_id: st
                 payload.role_title,
                 payload.interaction_type,
                 payload.meeting_notes,
-                payload.objections,
-                payload.competitor_mentioned,
+                ",".join(payload.objections),
+                ",".join(payload.competitors),
                 payload.budget,
                 payload.timeline,
-                payload.decision_makers,
+                ",".join(payload.decision_makers),
                 payload.next_steps,
                 deal_id,
                 now,
             ),
         )
+
         row = conn.execute(
-            "SELECT * FROM interactions WHERE id = ?", (cursor.lastrowid,)
+            "SELECT * FROM interactions WHERE id = ?",
+            (cursor.lastrowid,),
         ).fetchone()
+
         return row_to_dict(row)
 
 

@@ -1,24 +1,26 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class InteractionCreate(BaseModel):
-    prospect_name: str = Field(..., min_length=1)
-    company: str = Field(..., min_length=1)
-    role_title: str = Field(..., min_length=1)
-    interaction_type: str = "Sales interaction"
-    meeting_notes: str = Field(..., min_length=1)
-    objections: str = ""
-    competitor_mentioned: str = ""
+    prospect_name: str
+    company: str
+    role_title: str
+    interaction_type: str
+    meeting_notes: str
+
+    objections: List[str] = []
+    competitors: List[str] = []
+    decision_makers: List[str] = []
+
     budget: str = ""
     timeline: str = ""
-    decision_makers: str = ""
     next_steps: str = ""
-    deal_id: str | None = None
+    deal_id: str = ""
 
 
 class Interaction(InteractionCreate):

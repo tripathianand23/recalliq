@@ -11,7 +11,7 @@ API_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 st.set_page_config(
     page_title="Sales Memory Agent",
-    page_icon="🧠",
+    page_icon="💡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -253,12 +253,20 @@ def log_interaction_page() -> None:
 
     if submitted:
         payload = {
-            "prospect_name": prospect_name, "company": company, "role_title": role_title,
-            "interaction_type": interaction_type, "meeting_notes": meeting_notes,
-            "objections": objections, "competitor_mentioned": competitor_mentioned,
-            "budget": budget, "timeline": timeline,
-            "decision_makers": decision_makers, "next_steps": next_steps,
-            "deal_id": deal_id or None,
+            "prospect_name": prospect_name,
+            "company": company,
+            "role_title": role_title,
+            "interaction_type": interaction_type,
+            "meeting_notes": meeting_notes,
+
+            "objections": [x.strip() for x in objections.split(",") if x.strip()],
+            "competitors": [x.strip() for x in competitor_mentioned.split(",") if x.strip()],
+            "decision_makers": [x.strip() for x in decision_makers.split(",") if x.strip()],
+
+            "budget": budget,
+            "timeline": timeline,
+            "next_steps": next_steps,
+            "deal_id": deal_id or "",
         }
         try:
             result = api_post("/interactions", payload)
@@ -467,3 +475,6 @@ st.sidebar.markdown(
 )
 
 PAGES[st.session_state.current_page]()
+
+with st.sidebar:
+    st.write("Sidebar Loaded")
